@@ -532,6 +532,28 @@ body.mobile-nav-open{ overflow:hidden; }
 
 @media (max-width:900px){ .mobile-menu-button{ display:flex; } .nav-links, .nav-cta { display:none !important; } }
 
+/* Fixes d'empilement hero + dashboard pour mobile */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; align-items: start; }
+  .hero-left { order: 1; }
+  .hero-right { order: 2; width: 100%; display: block; margin-top: 18px; }
+  .dashboard-preview, .dp-card { max-width: 100% !important; width: 100% !important; }
+  .dp-card { margin: 0 auto; box-sizing: border-box; }
+  .dp-glow, .float-tag-1, .float-tag-2 { display: none !important; }
+  .dp-metrics { grid-template-columns: 1fr 1fr; }
+  .dp-module-row { flex-wrap: wrap; gap: 8px; }
+}
+
+@media (max-width: 480px) {
+  .hero { padding: 32px 14px; gap: 18px; }
+  .hero-title { font-size: clamp(22px, 10vw, 36px); }
+  .dp-card { padding: 16px; }
+  .hero-mini-stats { flex-direction: column; gap: 12px; }
+  .modules-grid { grid-template-columns: 1fr; gap: 12px; padding: 0 14px 36px; }
+  .team-grid { grid-template-columns: 1fr; gap: 14px; }
+  .spark-widget { right: 12px; bottom: 12px; }
+}
+
 </style>
 </head>
 <body>
