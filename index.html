@@ -514,6 +514,24 @@ footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; hei
   display: none; position: fixed; inset: 0; z-index: 600;
   background: rgba(5,8,5,0.92); backdrop-filter: blur(12px); overflow-y: auto;
 }
+
+/* ── MOBILE HAMBURGER & OVERLAY ── */
+.mobile-menu-button{ display:none; position:fixed; top:12px; right:16px; z-index:1100; width:52px; height:52px; border-radius:10px; background:var(--card-bg); border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:center; cursor:pointer; }
+.mobile-menu-button .hamburger{ width:20px; height:2px; background:var(--text); display:block; position:relative; }
+.mobile-menu-button .hamburger::before, .mobile-menu-button .hamburger::after{ content:''; position:absolute; left:0; right:0; height:2px; background:var(--text); }
+.mobile-menu-button .hamburger::before{ top:-6px; }
+.mobile-menu-button .hamburger::after{ bottom:-6px; }
+
+.mobile-nav-overlay{ position:fixed; inset:0; background: rgba(8,12,8,0.96); backdrop-filter: blur(8px); z-index:1050; transform: translateY(-6px); opacity:0; pointer-events:none; transition: opacity .22s ease, transform .22s ease; display:flex; align-items:flex-start; justify-content:center; padding: 80px 20px; }
+.mobile-nav-overlay.open{ opacity:1; pointer-events:auto; transform:none; }
+.mobile-nav-inner{ width:100%; max-width:420px; background:var(--card-bg); border:1px solid var(--glass-border); border-radius:12px; padding:22px; position:relative; }
+.mobile-close{ background:none; border:none; color:var(--muted); font-size:22px; position:absolute; top:12px; right:14px; cursor:pointer; }
+.mobile-nav-content .nav-links{ flex-direction:column; gap:12px; display:flex; }
+.mobile-nav-content .nav-links a{ font-size:16px; color:var(--text); padding:10px 0; }
+body.mobile-nav-open{ overflow:hidden; }
+
+@media (max-width:900px){ .mobile-menu-button{ display:flex; } .nav-links, .nav-cta { display:none !important; } }
+
 </style>
 </head>
 <body>
@@ -1559,4 +1577,40 @@ async function sparkSubmitForm(btn) {
 }
 </script>
 </body>
+<!-- Mobile hamburger button + overlay (injected/clonable) -->
+<button class="mobile-menu-button" aria-label="Ouvrir le menu">
+  <span class="hamburger" aria-hidden="true"></span>
+</button>
+<div class="mobile-nav-overlay" aria-hidden="true">
+  <div class="mobile-nav-inner">
+    <button class="mobile-close" aria-label="Fermer">×</button>
+    <div class="mobile-nav-content"></div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  const mobileBtn = document.querySelector('.mobile-menu-button');
+  const overlay = document.querySelector('.mobile-nav-overlay');
+  const closeBtn = document.querySelector('.mobile-close');
+  const content = document.querySelector('.mobile-nav-content');
+  const navLinks = document.querySelector('.nav-links');
+  const navCta = document.querySelector('.nav-cta');
+
+  // Populate overlay with a clone of existing nav links and CTA
+  if(navLinks){ content.appendChild(navLinks.cloneNode(true)); }
+  if(navCta){ const c = navCta.cloneNode(true); c.style.marginTop = '12px'; content.appendChild(c); }
+
+  function openMenu(){ overlay.classList.add('open'); overlay.setAttribute('aria-hidden','false'); document.body.classList.add('mobile-nav-open'); }
+  function closeMenu(){ overlay.classList.remove('open'); overlay.setAttribute('aria-hidden','true'); document.body.classList.remove('mobile-nav-open'); }
+
+  mobileBtn.addEventListener('click', function(e){ e.stopPropagation(); openMenu(); });
+  closeBtn.addEventListener('click', function(){ closeMenu(); });
+  overlay.addEventListener('click', function(e){ if(e.target === overlay) closeMenu(); });
+
+  // Close on Escape
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeMenu(); });
+});
+</script>
+
 </html>
