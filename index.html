@@ -534,23 +534,60 @@ body.mobile-nav-open{ overflow:hidden; }
 
 /* Fixes d'empilement hero + dashboard pour mobile */
 @media (max-width: 900px) {
-  .hero { grid-template-columns: 1fr; align-items: start; }
-  .hero-left { order: 1; }
-  .hero-right { order: 2; width: 100%; display: block; margin-top: 18px; }
-  .dashboard-preview, .dp-card { max-width: 100% !important; width: 100% !important; }
-  .dp-card { margin: 0 auto; box-sizing: border-box; }
+  nav {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 16px 20px;
+    gap: 12px;
+  }
+  .nav-links { flex-direction: column; width: 100%; gap: 12px; }
+  .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-height: auto;
+    padding: 48px 20px 40px;
+    gap: 30px;
+  }
+  .hero-left,
+  .hero-right { width: 100%; }
+  .hero-right { order: 2; margin-top: 0; }
+  .hero-actions { flex-direction: column; align-items: stretch; width: 100%; gap: 12px; margin-bottom: 32px; }
+  .hero-mini-stats { flex-direction: column; gap: 16px; width: 100%; }
+  .dashboard-preview,
+  .dp-card { width: 100% !important; max-width: 100% !important; }
+  .dp-card { margin: 0; box-sizing: border-box; }
   .dp-glow, .float-tag-1, .float-tag-2 { display: none !important; }
   .dp-metrics { grid-template-columns: 1fr 1fr; }
   .dp-module-row { flex-wrap: wrap; gap: 8px; }
+  .modules-grid { display: flex; flex-direction: column; gap: 16px; padding: 0 20px 40px; }
+  .team-grid { display: flex; flex-direction: column; gap: 20px; }
+  .contact-card { display: flex; flex-direction: column; padding: 32px 20px; gap: 24px; }
+  .stats-bar { display: flex; flex-direction: column; gap: 16px; padding: 24px 20px; }
+  .footer-main { display: flex; flex-direction: column; gap: 28px; padding: 32px 20px 26px; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; gap: 12px; padding: 18px 20px; }
+  .comparison-card,
+  .comparison-section { padding: 0 20px 40px; }
+  .ct-header,
+  .ct-row { grid-template-columns: 1fr; padding: 14px 0; }
+  .ct-header { border-bottom: none; }
+  .ct-row { border-bottom: 1px solid rgba(255,255,255,0.03); }
 }
 
 @media (max-width: 480px) {
-  .hero { padding: 32px 14px; gap: 18px; }
-  .hero-title { font-size: clamp(22px, 10vw, 36px); }
-  .dp-card { padding: 16px; }
-  .hero-mini-stats { flex-direction: column; gap: 12px; }
-  .modules-grid { grid-template-columns: 1fr; gap: 12px; padding: 0 14px 36px; }
-  .team-grid { grid-template-columns: 1fr; gap: 14px; }
+  body { cursor: auto; }
+  .cursor, .cursor-ring { display: none; }
+  nav { padding: 14px 16px; gap: 10px; }
+  .hero { padding: 32px 14px 32px; gap: 20px; }
+  .hero-title { font-size: clamp(24px, 10vw, 34px); }
+  .hero-desc { font-size: 13px; margin-bottom: 32px; }
+  .btn-primary, .btn-ghost { width: 100%; justify-content: center; padding: 14px 0; }
+  .dp-card { padding: 18px; }
+  .modules-grid { padding: 0 14px 32px; gap: 14px; }
+  .team-grid { gap: 16px; }
+  .contact-card { padding: 28px 16px; }
+  .footer-main { gap: 20px; padding: 24px 16px 22px; }
   .spark-widget { right: 12px; bottom: 12px; }
 }
 
