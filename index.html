@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AliamGroup — Real-Time Startup Ecosystem</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
 :root {
   --lime: #C8FF47;
@@ -82,7 +83,6 @@ body::before {
 
 /* ── NAV ── */
 nav {
-  display: flex; align-items: center; justify-content: space-between;
   padding: 20px 48px;
   border-bottom: 1px solid var(--glass-border);
   backdrop-filter: blur(20px);
@@ -94,21 +94,28 @@ nav {
   letter-spacing: -0.5px; color: var(--text); text-decoration: none;
 }
 .nav-logo span { color: var(--lime); }
-.nav-links { display: flex; gap: 36px; list-style: none; }
-.nav-links a {
-  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-  color: var(--muted); text-decoration: none; font-weight: 500;
-  transition: color 0.2s; font-family: 'Space Mono', monospace;
+.navbar-dark .navbar-nav .nav-link {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-family: 'Space Mono', monospace;
+  transition: color 0.2s;
 }
-.nav-links a:hover { color: var(--lime); }
-.nav-links .nav-contact a {
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link:focus {
+  color: var(--lime);
+}
+.navbar-dark .navbar-nav .nav-link.nav-contact {
   color: rgba(200,255,71,0.6);
   border: 1px solid rgba(200,255,71,0.15);
   padding: 6px 14px; border-radius: 2px; transition: all 0.2s;
 }
-.nav-links .nav-contact a:hover { color: var(--dark); background: var(--lime); border-color: var(--lime); }
+.navbar-dark .navbar-nav .nav-link.nav-contact:hover {
+  color: var(--dark); background: var(--lime); border-color: var(--lime);
+}
 .nav-cta {
-  display: flex; align-items: center; gap: 8px;
+  display: inline-flex; align-items: center; gap: 8px;
   background: var(--lime); color: var(--dark);
   padding: 10px 22px; font-family: 'Space Mono', monospace;
   font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
@@ -534,61 +541,42 @@ body.mobile-nav-open{ overflow:hidden; }
 
 /* Fixes d'empilement hero + dashboard pour mobile */
 @media (max-width: 900px) {
-  nav {
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    padding: 16px 20px;
-    gap: 12px;
-  }
-  .nav-links { flex-direction: column; width: 100%; gap: 12px; }
-  .hero {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    min-height: auto;
-    padding: 48px 20px 40px;
-    gap: 30px;
-  }
-  .hero-left,
-  .hero-right { width: 100%; }
-  .hero-right { order: 2; margin-top: 0; }
-  .hero-actions { flex-direction: column; align-items: stretch; width: 100%; gap: 12px; margin-bottom: 32px; }
-  .hero-mini-stats { flex-direction: column; gap: 16px; width: 100%; }
-  .dashboard-preview,
-  .dp-card { width: 100% !important; max-width: 100% !important; }
-  .dp-card { margin: 0; box-sizing: border-box; }
-  .dp-glow, .float-tag-1, .float-tag-2 { display: none !important; }
-  .dp-metrics { grid-template-columns: 1fr 1fr; }
-  .dp-module-row { flex-wrap: wrap; gap: 8px; }
-  .modules-grid { display: flex; flex-direction: column; gap: 16px; padding: 0 20px 40px; }
-  .team-grid { display: flex; flex-direction: column; gap: 20px; }
-  .contact-card { display: flex; flex-direction: column; padding: 32px 20px; gap: 24px; }
-  .stats-bar { display: flex; flex-direction: column; gap: 16px; padding: 24px 20px; }
-  .footer-main { display: flex; flex-direction: column; gap: 28px; padding: 32px 20px 26px; }
-  .footer-bottom { flex-direction: column; align-items: flex-start; gap: 12px; padding: 18px 20px; }
-  .comparison-card,
-  .comparison-section { padding: 0 20px 40px; }
-  .ct-header,
-  .ct-row { grid-template-columns: 1fr; padding: 14px 0; }
-  .ct-header { border-bottom: none; }
-  .ct-row { border-bottom: 1px solid rgba(255,255,255,0.03); }
+  nav { padding: 16px 20px; }
+  .hero { display:flex; flex-direction:column; align-items:stretch; min-height:auto; padding:48px 20px 40px; gap:30px; }
+  .hero-left, .hero-right { width:100%; }
+  .hero-right { order:2; margin-top:0; }
+  .hero-actions { flex-direction:column; align-items:stretch; width:100%; gap:12px; margin-bottom:32px; }
+  .hero-mini-stats { flex-direction:column; gap:16px; width:100%; }
+  .dashboard-preview, .dp-card { width:100% !important; max-width:100% !important; }
+  .dp-card { margin:0; box-sizing:border-box; }
+  .dp-glow, .float-tag-1, .float-tag-2 { display:none !important; }
+  .dp-metrics { grid-template-columns:1fr 1fr; }
+  .dp-module-row { flex-wrap:wrap; gap:8px; }
+  .modules-grid, .team-grid { display:flex; flex-direction:column; gap:16px; }
+  .modules-grid { padding:0 20px 40px; }
+  .contact-card { display:flex; flex-direction:column; padding:32px 20px; gap:24px; }
+  .stats-bar { display:flex; flex-direction:column; gap:16px; padding:24px 20px; }
+  .footer-main { display:flex; flex-direction:column; gap:28px; padding:32px 20px 26px; }
+  .footer-bottom { flex-direction:column; align-items:flex-start; gap:12px; padding:18px 20px; }
+  .comparison-card, .comparison-section { padding:0 20px 40px; }
+  .ct-header, .ct-row { grid-template-columns:1fr; padding:14px 0; }
+  .ct-header { border-bottom:none; }
+  .ct-row { border-bottom:1px solid rgba(255,255,255,0.03); }
 }
 
 @media (max-width: 480px) {
-  body { cursor: auto; }
-  .cursor, .cursor-ring { display: none; }
-  nav { padding: 14px 16px; gap: 10px; }
-  .hero { padding: 32px 14px 32px; gap: 20px; }
-  .hero-title { font-size: clamp(24px, 10vw, 34px); }
-  .hero-desc { font-size: 13px; margin-bottom: 32px; }
-  .btn-primary, .btn-ghost { width: 100%; justify-content: center; padding: 14px 0; }
-  .dp-card { padding: 18px; }
-  .modules-grid { padding: 0 14px 32px; gap: 14px; }
-  .team-grid { gap: 16px; }
-  .contact-card { padding: 28px 16px; }
-  .footer-main { gap: 20px; padding: 24px 16px 22px; }
-  .spark-widget { right: 12px; bottom: 12px; }
+  body { cursor:auto; }
+  .cursor, .cursor-ring { display:none; }
+  nav { padding:14px 16px; }
+  .hero { padding:32px 14px 32px; gap:20px; }
+  .hero-title { font-size:clamp(24px, 10vw, 34px); }
+  .hero-desc { font-size:13px; margin-bottom:32px; }
+  .btn-primary, .btn-ghost { width:100%; justify-content:center; padding:14px 0; }
+  .dp-card { padding:18px; }
+  .modules-grid { padding:0 14px 32px; gap:14px; }
+  .contact-card { padding:28px 16px; }
+  .footer-main { gap:20px; padding:24px 16px 22px; }
+  .spark-widget { right:12px; bottom:12px; }
 }
 
 </style>
@@ -663,18 +651,23 @@ body.mobile-nav-open{ overflow:hidden; }
 </div>
 
 <!-- NAV -->
-<nav>
-  <a href="#" class="nav-logo">Aliam<span>Group</span>.com</a>
-  <ul class="nav-links">
-    <li><a href="#modules">Modules</a></li>
-    <li><a href="#performance">Performance</a></li>
-    <li><a href="#equipe">Notre Équipe</a></li>
-    <li><a href="#contact">À propos</a></li>
-    <li class="nav-contact"><a href="#contact">Nous Contacter</a></li>
-  </ul>
-  <button class="nav-cta" onclick="openDashboard()">
-    <span>▶</span> Accéder au Dashboard
-  </button>
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top px-3 px-lg-4 py-3">
+  <div class="container-fluid">
+    <a href="#" class="navbar-brand nav-logo">Aliam<span>Group</span>.com</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNavbar">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
+        <li class="nav-item"><a class="nav-link" href="#modules">Modules</a></li>
+        <li class="nav-item"><a class="nav-link" href="#performance">Performance</a></li>
+        <li class="nav-item"><a class="nav-link" href="#equipe">Notre Équipe</a></li>
+        <li class="nav-item"><a class="nav-link" href="#contact">À propos</a></li>
+        <li class="nav-item"><a class="nav-link nav-contact" href="#contact">Nous Contacter</a></li>
+        <li class="nav-item"><button class="btn btn-sm nav-cta ms-lg-2" onclick="openDashboard()"><span>▶</span> Accéder au Dashboard</button></li>
+      </ul>
+    </div>
+  </div>
 </nav>
 
 <!-- HERO -->
