@@ -578,6 +578,277 @@ body.mobile-nav-open{ overflow:hidden; }
   .footer-main { gap:20px; padding:24px 16px 22px; }
   .spark-widget { right:12px; bottom:12px; }
 }
+/* ════════════════════════════════
+   FIXES MOBILE - DÉBORDEMENTS
+   ════════════════════════════════ */
+
+/* 1. FORCE OVERFLOW-X HIDDEN */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+}
+
+/* 2. LOGO TROP GRAND SUR MOBILE */
+@media (max-width: 900px) {
+  .nav-logo {
+    font-size: 16px; /* Réduit de 20px */
+    letter-spacing: -0.3px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-logo {
+    font-size: 14px; /* Encore plus petit */
+    letter-spacing: 0px;
+  }
+}
+
+/* 3. TITRES QUI DÉBORDENT */
+@media (max-width: 900px) {
+  .sh-title {
+    font-size: 32px; /* Réduit de 42px */
+    line-height: 1.1;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+}
+
+@media (max-width: 480px) {
+  .sh-title {
+    font-size: 24px;
+  }
+  
+  /* Hero title aussi */
+  .hero-title {
+    font-size: clamp(20px, 8vw, 32px) !important;
+    letter-spacing: -1px;
+  }
+}
+
+/* 4. MASQUER LE HAMBURGER EN BAS À GAUCHE (le duplicate) */
+.mobile-menu-button:first-of-type {
+  display: none !important;
+}
+
+/* Garder seulement celui en haut à droite */
+@media (max-width: 900px) {
+  .mobile-menu-button {
+    display: flex;
+    position: fixed;
+    top: 12px;
+    right: 16px;
+    z-index: 1100;
+  }
+}
+
+/* 5. NAV PADDING RÉDUIT */
+@media (max-width: 900px) {
+  nav {
+    padding: 14px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  nav {
+    padding: 12px 14px;
+  }
+}
+
+/* 6. SECTIONS PADDING RÉDUIT */
+@media (max-width: 900px) {
+  .hero {
+    padding: 40px 18px 30px;
+  }
+  
+  .modules-grid {
+    padding: 0 18px 40px;
+  }
+  
+  .contact-card {
+    padding: 28px 18px;
+  }
+  
+  .footer-main {
+    padding: 32px 18px 24px;
+  }
+  
+  .footer-bottom {
+    padding: 16px 18px;
+  }
+  
+  .comparison-section {
+    padding: 0 18px 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 32px 12px 24px;
+    gap: 16px;
+  }
+  
+  .modules-grid {
+    padding: 0 12px 32px;
+  }
+  
+  .contact-card {
+    padding: 20px 14px;
+  }
+  
+  .footer-main {
+    padding: 24px 14px 18px;
+  }
+  
+  .footer-bottom {
+    padding: 14px 14px;
+  }
+}
+
+/* 7. CONTENEURS 100% SANS DÉBORDEMENT */
+@media (max-width: 900px) {
+  .section-header,
+  .hero,
+  .stats-bar,
+  .modules-grid,
+  .comparison-section,
+  #equipe,
+  #contact {
+    box-sizing: border-box;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* 8. TOPBAR MASQUÉE SUR MOBILE (elle peut créer du scroll) */
+@media (max-width: 900px) {
+  .topbar {
+    display: none;
+  }
+}
+
+/* 9. DASHBOARD CARD - RESPONSIVE */
+@media (max-width: 900px) {
+  .dashboard-preview {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .dp-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .dp-metrics {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dp-card {
+    padding: 16px;
+  }
+  
+  .dp-metrics {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 10. SECTIONS HEADER PADDING */
+@media (max-width: 900px) {
+  .section-header {
+    padding: 48px 18px 32px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+
+/* 11. CONTACT FORM 100% WIDTH */
+@media (max-width: 900px) {
+  .contact-form {
+    width: 100%;
+  }
+  
+  .form-input,
+  .form-textarea,
+  .form-select {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* 12. HERO BADGE & MINI STATS */
+@media (max-width: 480px) {
+  .hero-badge {
+    font-size: 8px;
+    padding: 6px 12px;
+  }
+  
+  .hero-mini-stats {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .mini-stat .val {
+    font-size: 22px;
+  }
+}
+
+/* 13. BUTTONS FULL WIDTH */
+@media (max-width: 900px) {
+  .btn-primary,
+  .btn-ghost,
+  .form-submit,
+  .sf-submit {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* 14. SPARK BANNER RESPONSIVE */
+@media (max-width: 900px) {
+  .spark-banner {
+    flex-direction: column;
+    padding: 20px 18px;
+    gap: 16px;
+  }
+  
+  .sb-cta {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .spark-banner {
+    padding: 16px 12px;
+  }
+}
+
+/* 15. TEAM CARDS */
+@media (max-width: 900px) {
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 16. WORD-BREAK POUR TEXTES LONGS */
+@media (max-width: 900px) {
+  h1, h2, h3, h4, h5, h6,
+  .hero-title,
+  .sh-title,
+  .contact-title {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+}
+
 
 </style>
 </head>
