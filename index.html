@@ -1636,7 +1636,7 @@ async function sparkSubmitForm(btn) {
         const response = await fetch('https://api.brevo.com/v3/smtp/email', {
             method: 'POST',
             headers: {
-                'api-key': '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',
+                'api-key': 'xkeysib9de3d3f163378a1ed4b56037f6b6bc82d44f1442a471f1149620bc8924fa6244-w2VJqNwksx4Owh6a',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -1645,7 +1645,7 @@ async function sparkSubmitForm(btn) {
                     email: "no-reply@aliamflow.com"
                 },
                 to: [{
-                    email: "ton-email@aliamflow.com",   // ← CHANGE ÇA avec ton vrai email
+                    email: "holding.rhflow@yahoo.com",   // ← CHANGE ÇA avec ton vrai email
                     name: "Recrutement AliamGroup"
                 }],
                 subject: `Nouvelle candidature : ${prenom} ${nom} - ${poste}`,
