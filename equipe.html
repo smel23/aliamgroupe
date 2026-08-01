@@ -1957,8 +1957,8 @@ nav.navbar {
       </ul>
       <div style="margin-top:24px;padding:16px;background:rgba(200,255,71,0.04);border:1px solid rgba(200,255,71,0.1);border-radius:8px;">
         <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--lime);margin-bottom:8px;">Email Direct</div>
-        <div style="font-size:11px;color:var(--muted);">contact@aliamgroup.com</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:4px;">+225 07 00 00 00 00</div>
+        <a href="mailto:holding.rhflow@gmail.com" style="display:block;font-size:11px;color:var(--muted);text-decoration:none;">holding.rhflow@gmail.com</a>
+        <a href="tel:+2250554355419" style="display:block;font-size:11px;color:var(--muted);text-decoration:none;margin-top:4px;">+225 05 54 35 54 19</a>
       </div>
     </div>
   </div>
@@ -2088,6 +2088,7 @@ function sparkStep2(filiale) {
 function sparkStep3(dept) {
   sparkApp.dept = dept;
   sparkApp.cvLink = null;
+  sparkApp.cvName = null;
   document.getElementById('spark-body').innerHTML = `
     <div class="step-indicator">Candidature · Étape 3/3</div>
     <div class="spark-msg">🐸 <span class="lime">Spark :</span> « Dernière ligne droite. Vos informations restent entre vous et les modules RH de <strong>${sparkApp.filiale}</strong>. »</div>
@@ -2107,15 +2108,129 @@ function sparkStep3(dept) {
         </div>
       </div>
       <div class="sf-row">
-        <label class="sf-label">Lien vers votre CV</label>
-        <input type="url" class="sf-input" id="cand-cv" placeholder="Lien Google Drive, Dropbox, WeTransfer...">
-        <div class="sf-hint">Déposez votre CV sur Drive / Dropbox / WeTransfer, réglez le partage sur « toute personne disposant du lien », puis collez le lien ici.</div>
+        <label class="sf-label">Votre CV (PDF)</label>
+        <div class="dropzone" id="cv-dropzone" onclick="document.getElementById('cv-input').click()">
+          <div class="dz-icon">📎</div>
+          <div class="dz-text">Glissez votre CV ici<br>ou <strong>cliquez pour parcourir</strong></div>
+          <div class="dz-hint">PDF · 5 Mo max</div>
+          <div class="upload-status" id="cv-status" style="display:none;"></div>
+        </div>
+        <input type="file" id="cv-input" accept="application/pdf" style="display:none;">
+        <input type="url" class="sf-input" id="cand-cv" style="display:none;margin-top:10px;" placeholder="Ou collez un lien vers votre CV">
+        <div class="sf-hint" id="cv-fallback-hint" style="display:none;">L'upload automatique n'a pas fonctionné. Déposez votre CV sur Drive/Dropbox (partage « toute personne avec le lien ») et collez le lien ci-dessus.</div>
       </div>
       <div class="sf-error" id="cand-error"></div>
       <button class="sf-submit" id="cand-submit" onclick="sparkSubmitCandidature()">🚀 Envoyer la candidature</button>
       <button class="back-link" onclick="sparkStep2(sparkApp.filiale)">← Retour</button>
     </div>
   `;
+  initCvUpload();
+}
+
+// ==================== UPLOAD DIRECT (tmpfiles.org) ====================
+// Le fichier est envoyé vers un hébergeur temporaire gratuit qui renvoie
+// un lien de téléchargement. Ce lien est ensuite transmis via Formspree.
+// ⚠️ Ces fichiers sont supprimés automatiquement après ~60 min : les RH
+// doivent télécharger le CV rapidement après réception.
+// En cas d'échec (service indisponible, CORS…), on bascule sur un champ
+// « lien » manuel pour ne jamais bloquer le candidat.
+const UPLOAD_URL = 'https://tmpfiles.org/api/v1/upload';
+const UPLOAD_MAX_MO = 5;
+
+// Transforme l'URL page (tmpfiles.org/123/f.pdf) en lien direct (…/dl/123/f.pdf)
+function tmpfilesDirect(url) {
+  return url.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
+}
+
+function bindDropzone(cfg) {
+  const dz = document.getElementById(cfg.dz);
+  const input = document.getElementById(cfg.input);
+  if (!dz || !input) return;
+
+  ['dragover','dragenter'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('dragover'); }));
+  ['dragleave','dragend'].forEach(ev => dz.addEventListener(ev, () => dz.classList.remove('dragover')));
+  dz.addEventListener('drop', e => {
+    e.preventDefault(); dz.classList.remove('dragover');
+    if (e.dataTransfer.files.length) handleUpload(e.dataTransfer.files[0], cfg);
+  });
+  input.addEventListener('change', () => { if (input.files.length) handleUpload(input.files[0], cfg); });
+}
+
+function showLinkFallback(cfg, msg) {
+  const linkInput = document.getElementById(cfg.linkInput);
+  if (linkInput) linkInput.style.display = 'block';
+  const hint = cfg.hint ? document.getElementById(cfg.hint) : null;
+  if (hint) hint.style.display = 'block';
+  const errEl = document.getElementById(cfg.err);
+  if (errEl && msg) { errEl.textContent = msg; errEl.style.display = 'block'; }
+}
+
+async function handleUpload(file, cfg) {
+  const errEl  = document.getElementById(cfg.err);
+  const status = document.getElementById(cfg.status);
+  const dz     = document.getElementById(cfg.dz);
+  errEl.style.display = 'none';
+
+  if (file.type !== 'application/pdf') {
+    errEl.textContent = '✗ Seuls les fichiers PDF sont acceptés.';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (file.size > UPLOAD_MAX_MO * 1024 * 1024) {
+    errEl.textContent = '✗ Fichier trop lourd (' + (file.size/1024/1024).toFixed(1) + ' Mo). Max : ' + UPLOAD_MAX_MO + ' Mo.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  status.style.display = 'block';
+  let pct = 0;
+  const anim = setInterval(() => {
+    pct = Math.min(pct + Math.floor(Math.random() * 15) + 5, 95);
+    status.textContent = '[ Envoi... ' + pct + '% ]';
+  }, 140);
+
+  try {
+    const fd = new FormData();
+    fd.append('file', file);
+    const res = await fetch(UPLOAD_URL, { method: 'POST', body: fd });
+    clearInterval(anim);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const out = await res.json();
+    const pageUrl = out && out.data && out.data.url;
+    if (!pageUrl) throw new Error('réponse inattendue');
+
+    const link = tmpfilesDirect(pageUrl);
+    cfg.onDone(link, file.name);
+
+    status.textContent = '[ Envoi... 100% ] ✓';
+    dz.classList.add('has-file');
+    dz.querySelector('.dz-icon').textContent = '✅';
+    dz.querySelector('.dz-text').innerHTML = '<strong>' + file.name + '</strong><br>' + (file.size/1024).toFixed(0) + ' Ko — ajouté';
+    dz.querySelector('.dz-hint').textContent = 'Cliquez pour remplacer';
+  } catch (err) {
+    clearInterval(anim);
+    status.style.display = 'none';
+    // Repli : on laisse le candidat coller un lien à la main
+    showLinkFallback(cfg, '✗ Envoi automatique impossible. Collez un lien vers votre fichier ci-dessous.');
+  }
+}
+
+function initCvUpload() {
+  sparkApp.cvLink = null;
+  bindDropzone({
+    dz: 'cv-dropzone', input: 'cv-input', status: 'cv-status',
+    err: 'cand-error', linkInput: 'cand-cv', hint: 'cv-fallback-hint',
+    onDone: (link, name) => { sparkApp.cvLink = link; sparkApp.cvName = name; }
+  });
+}
+
+function initBizUpload() {
+  sparkBiz.docLink = null;
+  bindDropzone({
+    dz: 'biz-dropzone', input: 'biz-doc-input', status: 'biz-doc-status',
+    err: 'biz-error', linkInput: 'biz-doc', hint: null,
+    onDone: (link, name) => { sparkBiz.docLink = link; sparkBiz.docName = name; }
+  });
 }
 
 // ── ÉTAPE 4 : validation & envoi Formspree ──
@@ -2123,7 +2238,8 @@ async function sparkSubmitCandidature() {
   const nom   = document.getElementById('cand-nom').value.trim();
   const tel   = document.getElementById('cand-tel').value.trim();
   const email = document.getElementById('cand-email').value.trim();
-  const cv    = document.getElementById('cand-cv').value.trim();
+  const manualCv = document.getElementById('cand-cv').value.trim();
+  const cv    = sparkApp.cvLink || manualCv;
   const errEl = document.getElementById('cand-error');
   const btn   = document.getElementById('cand-submit');
   errEl.style.display = 'none';
@@ -2139,7 +2255,7 @@ async function sparkSubmitCandidature() {
     return;
   }
   if (!cv || !/^https?:\/\//i.test(cv)) {
-    errEl.textContent = '✗ Ajoutez un lien valide vers votre CV (commençant par http).';
+    errEl.textContent = '✗ Ajoutez votre CV (glissez le fichier ou collez un lien).';
     errEl.style.display = 'block';
     return;
   }
@@ -2223,6 +2339,7 @@ function sparkBizStep2(profil) {
 function sparkBizStep3(focus) {
   sparkBiz.focus = focus;
   sparkBiz.docLink = null;
+  sparkBiz.docName = null;
   document.getElementById('spark-body').innerHTML = `
     <div class="step-indicator">Partenariats · Étape 3/3</div>
     <div class="spark-msg">🐸 <span class="lime">Spark :</span> « Parfait. Vos informations sont transmises de manière <strong>sécurisée et confidentielle</strong> au Secrétariat Général. »</div>
@@ -2246,14 +2363,22 @@ function sparkBizStep3(focus) {
         <textarea class="sf-textarea" id="biz-message" placeholder="Ticket envisagé, horizon, modalités..."></textarea>
       </div>
       <div class="sf-row">
-        <label class="sf-label">Lien document <span style="color:rgba(107,122,107,0.7);text-transform:none;">(LOI, NDA — optionnel)</span></label>
-        <input type="url" class="sf-input" id="biz-doc" placeholder="Lien Drive / Dropbox (optionnel)">
+        <label class="sf-label">Document <span style="color:rgba(107,122,107,0.7);text-transform:none;">(LOI, NDA — optionnel)</span></label>
+        <div class="dropzone" id="biz-dropzone" onclick="document.getElementById('biz-doc-input').click()">
+          <div class="dz-icon">📎</div>
+          <div class="dz-text">Glissez votre document ici<br>ou <strong>cliquez pour parcourir</strong></div>
+          <div class="dz-hint">PDF · 5 Mo max</div>
+          <div class="upload-status" id="biz-doc-status" style="display:none;"></div>
+        </div>
+        <input type="file" id="biz-doc-input" accept="application/pdf" style="display:none;">
+        <input type="url" class="sf-input" id="biz-doc" style="display:none;margin-top:10px;" placeholder="Ou collez un lien (optionnel)">
       </div>
       <div class="sf-error" id="biz-error"></div>
       <button class="sf-submit" id="biz-submit" onclick="sparkSubmitBusiness()">🤝 Transmettre au Secrétariat Général</button>
       <button class="back-link" onclick="sparkBizStep2(sparkBiz.profil)">← Retour</button>
     </div>
   `;
+  initBizUpload();
 }
 
 // ── ÉTAPE 4 : validation & envoi Formspree ──
@@ -2262,7 +2387,7 @@ async function sparkSubmitBusiness() {
   const contact = document.getElementById('biz-contact').value.trim();
   const email   = document.getElementById('biz-email').value.trim();
   const message = document.getElementById('biz-message').value.trim();
-  const doc     = document.getElementById('biz-doc').value.trim();
+  const doc     = sparkBiz.docLink || document.getElementById('biz-doc').value.trim();
   const errEl   = document.getElementById('biz-error');
   const btn     = document.getElementById('biz-submit');
   errEl.style.display = 'none';
