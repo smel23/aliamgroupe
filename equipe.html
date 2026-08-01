@@ -1182,32 +1182,57 @@ html, body {
 /* ══════════ INVITE ROTATION DASHBOARD (mobile) ══════════ */
 #rotate-prompt { display: none; }
 
-/* En mobile portrait, on masque le dashboard et on montre l'invite */
+/* ---- MOBILE PORTRAIT : on montre l'invite, dashboard caché ---- */
 @media (max-width: 991px) and (orientation: portrait) {
   #dashboard-modal .db-wrap { display: none; }
-  #dashboard-modal.force-portrait .db-wrap { display: block; }
   #rotate-prompt {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     min-height: 100dvh; padding: 32px 28px; text-align: center; gap: 8px;
   }
+
+  /* MODE PAYSAGE SIMULÉ : le dashboard est physiquement tourné à 90°.
+     Fonctionne même si le verrouillage d'orientation du téléphone
+     empêche la bascule réelle. Déclenché par le bouton (.rotated). */
+  #dashboard-modal.rotated #rotate-prompt { display: none; }
+  #dashboard-modal.rotated .db-wrap {
+    display: block;
+    position: fixed; top: 0; left: 0;
+    width: 100vh; height: 100vw;
+    transform: rotate(90deg);
+    transform-origin: top left;
+    margin: 0 0 0 100vw !important;
+    padding: 0 0 24px !important;
+    overflow-y: auto; -webkit-overflow-scrolling: touch;
+  }
+  #dashboard-modal.rotated .db-header {
+    position: sticky; top: 0; z-index: 5;
+    background: rgba(8,12,8,0.97); backdrop-filter: blur(12px);
+    margin: 0 0 16px !important; padding: 10px 20px !important;
+  }
+  #dashboard-modal.rotated [data-db="kpis"]  { grid-template-columns: repeat(4,1fr) !important; gap: 10px !important; margin: 0 20px 14px !important; }
+  #dashboard-modal.rotated [data-db="main"]  { grid-template-columns: 1fr 300px !important; gap: 14px !important; margin: 0 20px 14px !important; }
+  #dashboard-modal.rotated [data-db="three"] { grid-template-columns: repeat(3,1fr) !important; gap: 10px !important; margin: 0 20px 14px !important; }
+  #dashboard-modal.rotated [data-db="two"]   { grid-template-columns: 1fr 1fr !important; gap: 10px !important; margin: 0 20px 14px !important; }
+  #dashboard-modal.rotated [data-db="kpis"] > div > div:nth-child(2) { font-size: 26px !important; }
+  #dashboard-modal.rotated svg { width: 100% !important; height: auto !important; }
+  /* bouton "continuer en portrait" empilé classique */
   #dashboard-modal.force-portrait #rotate-prompt { display: none; }
+  #dashboard-modal.force-portrait .db-wrap { display: block; }
 }
 
-/* En paysage, jamais d'invite : le vrai dashboard s'affiche */
+/* ---- MOBILE PAYSAGE RÉEL (verrouillage désactivé) : affichage direct ---- */
 @media (max-width: 991px) and (orientation: landscape) {
   #rotate-prompt { display: none !important; }
-  #dashboard-modal .db-wrap { display: block; }
-  /* Dashboard optimisé pour la largeur du paysage */
-  #dashboard-modal .db-wrap { padding: 0 0 30px !important; }
+  #dashboard-modal .db-wrap { display: block; padding: 0 0 30px !important; }
   #dashboard-modal .db-header {
     position: sticky; top: 0; z-index: 5;
     background: rgba(8,12,8,0.97); backdrop-filter: blur(12px);
     margin: 0 0 16px !important; padding: 10px 18px !important;
   }
-  #dashboard-modal [data-db="kpis"] { grid-template-columns: repeat(4,1fr) !important; gap: 10px !important; margin: 0 18px 14px !important; }
-  #dashboard-modal [data-db="main"] { grid-template-columns: 1fr 300px !important; gap: 14px !important; margin: 0 18px 14px !important; }
+  #dashboard-modal [data-db="kpis"]  { grid-template-columns: repeat(4,1fr) !important; gap: 10px !important; margin: 0 18px 14px !important; }
+  #dashboard-modal [data-db="main"]  { grid-template-columns: 1fr 300px !important; gap: 14px !important; margin: 0 18px 14px !important; }
   #dashboard-modal [data-db="three"] { grid-template-columns: repeat(3,1fr) !important; gap: 10px !important; margin: 0 18px 14px !important; }
-  #dashboard-modal [data-db="two"] { grid-template-columns: 1fr 1fr !important; gap: 10px !important; margin: 0 18px 14px !important; }
+  #dashboard-modal [data-db="two"]   { grid-template-columns: 1fr 1fr !important; gap: 10px !important; margin: 0 18px 14px !important; }
   #dashboard-modal [data-db="kpis"] > div > div:nth-child(2) { font-size: 26px !important; }
   #dashboard-modal svg { width: 100% !important; height: auto !important; }
 }
@@ -1246,8 +1271,15 @@ html, body {
   margin-top: 6px;
 }
 .rp-sub { font-size: 13px; line-height: 1.7; color: rgba(234,234,234,0.6); }
+.rp-go {
+  margin-top: 26px; padding: 15px 30px; cursor: pointer;
+  background: var(--lime); border: none; color: #080C08;
+  border-radius: 100px; font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 14px; letter-spacing: 0.3px;
+}
+.rp-go:active { transform: scale(0.97); }
 .rp-skip {
-  margin-top: 22px; padding: 12px 22px; cursor: pointer;
+  margin-top: 12px; padding: 12px 22px; cursor: pointer;
   background: transparent; border: 1px solid rgba(255,255,255,0.15);
   color: rgba(234,234,234,0.75); border-radius: 100px;
   font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 1px;
@@ -1471,6 +1503,7 @@ nav.navbar {
   .spark-btn { width: 56px !important; height: 56px !important; bottom: 18px !important; right: 16px !important; }
   h1, h2, h3, p { overflow-wrap: anywhere; }
 }
+  .sf-hint { font-size: 11px; line-height: 1.6; color: rgba(107,122,107,0.95); margin-top: 7px; }
 </style>
 </head>
 <body>
@@ -1724,8 +1757,9 @@ nav.navbar {
         <span class="rp-bar"></span><span class="rp-bar"></span><span class="rp-bar"></span>
       </div>
     </div>
-    <div class="rp-title">Tournez votre téléphone</div>
-    <div class="rp-sub">Le tableau de bord s'affiche en plein écran<br>en mode paysage.</div>
+    <div class="rp-title">Passez en plein écran</div>
+    <div class="rp-sub">Le tableau de bord s'affiche bien mieux<br>en mode paysage.</div>
+    <button class="rp-go" onclick="dashRotate()">⟳ Afficher en paysage</button>
     <button class="rp-skip" onclick="dashForcePortrait()">Continuer en portrait →</button>
   </div>
 
@@ -2011,13 +2045,12 @@ function sparkResetBody() {
   `;
 }
 
-// ==================== TUNNEL CANDIDATURE — BREVO ====================
-// L'envoi passe par send.php (côté serveur) : la clé API n'est plus
-// exposée ici, et Brevo voit toujours l'IP fixe de l'hébergeur.
-const SEND_ENDPOINT = 'send.php';
-const CV_MAX_MO     = 5;
+// ==================== TUNNEL CANDIDATURE — FORMSPREE ====================
+// Les envois passent par Formspree : aucun backend, aucune clé secrète.
+// Formspree relaie chaque soumission par email vers ta boîte de réception.
+const FORMSPREE_URL = 'https://formspree.io/f/mpqvgjqz';
 
-const sparkApp = { filiale: null, dept: null, cvBase64: null, cvName: null };
+const sparkApp = { filiale: null, dept: null, cvLink: null };
 
 // ── ÉTAPE 1 : choix de la filiale ──
 function sparkShowForm() {
@@ -2054,8 +2087,7 @@ function sparkStep2(filiale) {
 // ── ÉTAPE 3 : collecte des informations + CV ──
 function sparkStep3(dept) {
   sparkApp.dept = dept;
-  sparkApp.cvBase64 = null;
-  sparkApp.cvName = null;
+  sparkApp.cvLink = null;
   document.getElementById('spark-body').innerHTML = `
     <div class="step-indicator">Candidature · Étape 3/3</div>
     <div class="spark-msg">🐸 <span class="lime">Spark :</span> « Dernière ligne droite. Vos informations restent entre vous et les modules RH de <strong>${sparkApp.filiale}</strong>. »</div>
@@ -2075,86 +2107,23 @@ function sparkStep3(dept) {
         </div>
       </div>
       <div class="sf-row">
-        <label class="sf-label">Votre CV (PDF)</label>
-        <div class="dropzone" id="cv-dropzone" onclick="document.getElementById('cv-input').click()">
-          <div class="dz-icon">📎</div>
-          <div class="dz-text">Glissez votre CV ici<br>ou <strong>cliquez pour parcourir</strong></div>
-          <div class="dz-hint">PDF · ${CV_MAX_MO} Mo max</div>
-          <div class="upload-status" id="cv-status" style="display:none;"></div>
-        </div>
-        <input type="file" id="cv-input" accept="application/pdf" style="display:none;">
+        <label class="sf-label">Lien vers votre CV</label>
+        <input type="url" class="sf-input" id="cand-cv" placeholder="Lien Google Drive, Dropbox, WeTransfer...">
+        <div class="sf-hint">Déposez votre CV sur Drive / Dropbox / WeTransfer, réglez le partage sur « toute personne disposant du lien », puis collez le lien ici.</div>
       </div>
       <div class="sf-error" id="cand-error"></div>
       <button class="sf-submit" id="cand-submit" onclick="sparkSubmitCandidature()">🚀 Envoyer la candidature</button>
       <button class="back-link" onclick="sparkStep2(sparkApp.filiale)">← Retour</button>
     </div>
   `;
-  sparkInitDropzone();
 }
 
-// ── Drag & Drop du CV ──
-function sparkInitDropzone() {
-  const dz = document.getElementById('cv-dropzone');
-  const input = document.getElementById('cv-input');
-  ['dragover','dragenter'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('dragover'); }));
-  ['dragleave','dragend'].forEach(ev => dz.addEventListener(ev, () => dz.classList.remove('dragover')));
-  dz.addEventListener('drop', e => {
-    e.preventDefault();
-    dz.classList.remove('dragover');
-    if (e.dataTransfer.files.length) sparkHandleCV(e.dataTransfer.files[0]);
-  });
-  input.addEventListener('change', () => { if (input.files.length) sparkHandleCV(input.files[0]); });
-}
-
-function sparkHandleCV(file) {
-  const errEl = document.getElementById('cand-error');
-  errEl.style.display = 'none';
-  if (file.type !== 'application/pdf') {
-    errEl.textContent = '✗ Seuls les fichiers PDF sont acceptés.';
-    errEl.style.display = 'block';
-    return;
-  }
-  if (file.size > CV_MAX_MO * 1024 * 1024) {
-    errEl.textContent = '✗ Fichier trop lourd (' + (file.size/1024/1024).toFixed(1) + ' Mo). Max : ' + CV_MAX_MO + ' Mo.';
-    errEl.style.display = 'block';
-    return;
-  }
-  const status = document.getElementById('cv-status');
-  const dz = document.getElementById('cv-dropzone');
-  status.style.display = 'block';
-  let pct = 0;
-  const anim = setInterval(() => {
-    pct = Math.min(pct + Math.floor(Math.random() * 22) + 8, 99);
-    status.textContent = '[ Uploading... ' + pct + '% ]';
-  }, 90);
-
-  const reader = new FileReader();
-  reader.onload = () => {
-    clearInterval(anim);
-    sparkApp.cvBase64 = reader.result.split(',')[1];
-    sparkApp.cvName = file.name;
-    status.textContent = '[ Uploading... 100% ] ✓';
-    setTimeout(() => {
-      dz.classList.add('has-file');
-      dz.querySelector('.dz-icon').textContent = '✅';
-      dz.querySelector('.dz-text').innerHTML = '<strong>' + file.name + '</strong><br>' + (file.size/1024).toFixed(0) + ' Ko — prêt à l\'envoi';
-      dz.querySelector('.dz-hint').textContent = 'Cliquez pour remplacer';
-    }, 350);
-  };
-  reader.onerror = () => {
-    clearInterval(anim);
-    status.style.display = 'none';
-    errEl.textContent = '✗ Impossible de lire le fichier. Réessayez.';
-    errEl.style.display = 'block';
-  };
-  reader.readAsDataURL(file);
-}
-
-// ── ÉTAPE 4 : validation & envoi Brevo en arrière-plan ──
+// ── ÉTAPE 4 : validation & envoi Formspree ──
 async function sparkSubmitCandidature() {
   const nom   = document.getElementById('cand-nom').value.trim();
   const tel   = document.getElementById('cand-tel').value.trim();
   const email = document.getElementById('cand-email').value.trim();
+  const cv    = document.getElementById('cand-cv').value.trim();
   const errEl = document.getElementById('cand-error');
   const btn   = document.getElementById('cand-submit');
   errEl.style.display = 'none';
@@ -2169,8 +2138,8 @@ async function sparkSubmitCandidature() {
     errEl.style.display = 'block';
     return;
   }
-  if (!sparkApp.cvBase64) {
-    errEl.textContent = '✗ Joignez votre CV (PDF) avant d\'envoyer.';
+  if (!cv || !/^https?:\/\//i.test(cv)) {
+    errEl.textContent = '✗ Ajoutez un lien valide vers votre CV (commençant par http).';
     errEl.style.display = 'block';
     return;
   }
@@ -2179,24 +2148,25 @@ async function sparkSubmitCandidature() {
   btn.innerHTML = '<span class="spark-spinner"></span>&nbsp; Transmission en cours...';
 
   const payload = {
-    type: 'candidature',
-    filiale: sparkApp.filiale,
-    dept: sparkApp.dept,
-    nom: nom,
-    tel: tel,
+    _subject: `Candidature — ${sparkApp.filiale} · ${sparkApp.dept} — ${nom}`,
+    'Type de demande': 'Candidature (recrutement)',
+    'Filiale visée': sparkApp.filiale,
+    'Département': sparkApp.dept,
+    'Nom du candidat': nom,
+    'Téléphone': tel,
     email: email,
-    attachment: { content: sparkApp.cvBase64, name: sparkApp.cvName }
+    'Lien du CV': cv
   };
 
   try {
-    const res = await fetch(SEND_ENDPOINT, {
+    const res = await fetch(FORMSPREE_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify(payload)
     });
     const out = await res.json().catch(() => ({}));
-    if (!res.ok || !out.ok) {
-      throw new Error(out.message || 'Erreur HTTP ' + res.status);
+    if (!res.ok || out.ok === false || out.error) {
+      throw new Error((out.errors && out.errors[0] && out.errors[0].message) || out.error || 'Erreur HTTP ' + res.status);
     }
     document.getElementById('spark-body').innerHTML = `
       <div class="success-wrap">
@@ -2217,8 +2187,8 @@ async function sparkSubmitCandidature() {
   }
 }
 
-// ==================== PARCOURS INVESTISSEUR / PARTENAIRE IMMERSIF — BREVO ====================
-const sparkBiz = { profil: null, focus: null, docBase64: null, docName: null };
+// ==================== PARCOURS INVESTISSEUR / PARTENAIRE IMMERSIF — FORMSPREE ====================
+const sparkBiz = { profil: null, focus: null, docLink: null };
 
 // ── ÉTAPE 1 : qualification de l'intérêt ──
 function sparkShowBusiness() {
@@ -2252,8 +2222,7 @@ function sparkBizStep2(profil) {
 // ── ÉTAPE 3 : formulaire sécurisé intégré ──
 function sparkBizStep3(focus) {
   sparkBiz.focus = focus;
-  sparkBiz.docBase64 = null;
-  sparkBiz.docName = null;
+  sparkBiz.docLink = null;
   document.getElementById('spark-body').innerHTML = `
     <div class="step-indicator">Partenariats · Étape 3/3</div>
     <div class="spark-msg">🐸 <span class="lime">Spark :</span> « Parfait. Vos informations sont transmises de manière <strong>sécurisée et confidentielle</strong> au Secrétariat Général. »</div>
@@ -2277,87 +2246,23 @@ function sparkBizStep3(focus) {
         <textarea class="sf-textarea" id="biz-message" placeholder="Ticket envisagé, horizon, modalités..."></textarea>
       </div>
       <div class="sf-row">
-        <label class="sf-label">Document <span style="color:rgba(107,122,107,0.7);text-transform:none;">(LOI, NDA — optionnel)</span></label>
-        <div class="dropzone" id="biz-dropzone" onclick="document.getElementById('biz-doc-input').click()">
-          <div class="dz-icon">📎</div>
-          <div class="dz-text">Glissez votre document ici<br>ou <strong>cliquez pour parcourir</strong></div>
-          <div class="dz-hint">PDF · ${CV_MAX_MO} Mo max</div>
-          <div class="upload-status" id="biz-doc-status" style="display:none;"></div>
-        </div>
-        <input type="file" id="biz-doc-input" accept="application/pdf" style="display:none;">
+        <label class="sf-label">Lien document <span style="color:rgba(107,122,107,0.7);text-transform:none;">(LOI, NDA — optionnel)</span></label>
+        <input type="url" class="sf-input" id="biz-doc" placeholder="Lien Drive / Dropbox (optionnel)">
       </div>
       <div class="sf-error" id="biz-error"></div>
       <button class="sf-submit" id="biz-submit" onclick="sparkSubmitBusiness()">🤝 Transmettre au Secrétariat Général</button>
       <button class="back-link" onclick="sparkBizStep2(sparkBiz.profil)">← Retour</button>
     </div>
   `;
-  sparkInitBizDropzone();
 }
 
-// ── Drag & Drop du document LOI/NDA ──
-function sparkInitBizDropzone() {
-  const dz = document.getElementById('biz-dropzone');
-  const input = document.getElementById('biz-doc-input');
-  ['dragover','dragenter'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('dragover'); }));
-  ['dragleave','dragend'].forEach(ev => dz.addEventListener(ev, () => dz.classList.remove('dragover')));
-  dz.addEventListener('drop', e => {
-    e.preventDefault();
-    dz.classList.remove('dragover');
-    if (e.dataTransfer.files.length) sparkHandleBizDoc(e.dataTransfer.files[0]);
-  });
-  input.addEventListener('change', () => { if (input.files.length) sparkHandleBizDoc(input.files[0]); });
-}
-
-function sparkHandleBizDoc(file) {
-  const errEl = document.getElementById('biz-error');
-  errEl.style.display = 'none';
-  if (file.type !== 'application/pdf') {
-    errEl.textContent = '✗ Seuls les fichiers PDF sont acceptés.';
-    errEl.style.display = 'block';
-    return;
-  }
-  if (file.size > CV_MAX_MO * 1024 * 1024) {
-    errEl.textContent = '✗ Fichier trop lourd (' + (file.size/1024/1024).toFixed(1) + ' Mo). Max : ' + CV_MAX_MO + ' Mo.';
-    errEl.style.display = 'block';
-    return;
-  }
-  const status = document.getElementById('biz-doc-status');
-  const dz = document.getElementById('biz-dropzone');
-  status.style.display = 'block';
-  let pct = 0;
-  const anim = setInterval(() => {
-    pct = Math.min(pct + Math.floor(Math.random() * 22) + 8, 99);
-    status.textContent = '[ Uploading... ' + pct + '% ]';
-  }, 90);
-
-  const reader = new FileReader();
-  reader.onload = () => {
-    clearInterval(anim);
-    sparkBiz.docBase64 = reader.result.split(',')[1];
-    sparkBiz.docName = file.name;
-    status.textContent = '[ Uploading... 100% ] ✓';
-    setTimeout(() => {
-      dz.classList.add('has-file');
-      dz.querySelector('.dz-icon').textContent = '✅';
-      dz.querySelector('.dz-text').innerHTML = '<strong>' + file.name + '</strong><br>' + (file.size/1024).toFixed(0) + ' Ko — prêt à l\'envoi';
-      dz.querySelector('.dz-hint').textContent = 'Cliquez pour remplacer';
-    }, 350);
-  };
-  reader.onerror = () => {
-    clearInterval(anim);
-    status.style.display = 'none';
-    errEl.textContent = '✗ Impossible de lire le fichier. Réessayez.';
-    errEl.style.display = 'block';
-  };
-  reader.readAsDataURL(file);
-}
-
-// ── ÉTAPE 4 : validation & envoi prioritaire ──
+// ── ÉTAPE 4 : validation & envoi Formspree ──
 async function sparkSubmitBusiness() {
   const societe = document.getElementById('biz-societe').value.trim();
   const contact = document.getElementById('biz-contact').value.trim();
   const email   = document.getElementById('biz-email').value.trim();
   const message = document.getElementById('biz-message').value.trim();
+  const doc     = document.getElementById('biz-doc').value.trim();
   const errEl   = document.getElementById('biz-error');
   const btn     = document.getElementById('biz-submit');
   errEl.style.display = 'none';
@@ -2372,33 +2277,36 @@ async function sparkSubmitBusiness() {
     errEl.style.display = 'block';
     return;
   }
+  if (doc && !/^https?:\/\//i.test(doc)) {
+    errEl.textContent = '✗ Le lien du document doit commencer par http.';
+    errEl.style.display = 'block';
+    return;
+  }
 
   btn.disabled = true;
   btn.innerHTML = '<span class="spark-spinner"></span>&nbsp; Transmission sécurisée...';
 
   const payload = {
-    type: 'business',
-    profil: sparkBiz.profil,
-    focus: sparkBiz.focus,
-    societe: societe,
-    contact: contact,
-    nom: contact,
+    _subject: `[PRIORITAIRE] Partenariat — ${sparkBiz.profil} · ${sparkBiz.focus} — ${societe}`,
+    'Type de demande': 'Partenariat / Investissement (PRIORITAIRE)',
+    'Profil': sparkBiz.profil,
+    'Focus': sparkBiz.focus,
+    'Entité / Société': societe,
+    'Contact & Poste': contact,
     email: email,
-    message: message
+    'Message / Intentions': message || '—',
+    'Lien document (LOI/NDA)': doc || '—'
   };
-  if (sparkBiz.docBase64) {
-    payload.attachment = { content: sparkBiz.docBase64, name: sparkBiz.docName };
-  }
 
   try {
-    const res = await fetch(SEND_ENDPOINT, {
+    const res = await fetch(FORMSPREE_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify(payload)
     });
     const out = await res.json().catch(() => ({}));
-    if (!res.ok || !out.ok) {
-      throw new Error(out.message || 'Erreur HTTP ' + res.status);
+    if (!res.ok || out.ok === false || out.error) {
+      throw new Error((out.errors && out.errors[0] && out.errors[0].message) || out.error || 'Erreur HTTP ' + res.status);
     }
     document.getElementById('spark-body').innerHTML = `
       <div class="success-wrap">
@@ -2456,19 +2364,28 @@ document.addEventListener('DOMContentLoaded', () => {
 function openDashboard() {
   const m = document.getElementById('dashboard-modal');
   if (m) {
-    m.classList.remove('force-portrait');
+    m.classList.remove('force-portrait', 'rotated');
     m.scrollTop = 0;
     m.style.display = 'block';
     document.body.style.overflow = 'hidden';
   }
 }
-// "Continuer en portrait" : affiche le dashboard sans attendre la rotation
+// Affiche le dashboard tourné à 90° (paysage simulé, indépendant du
+// verrouillage d'orientation du téléphone)
+function dashRotate() {
+  const m = document.getElementById('dashboard-modal');
+  m.classList.remove('force-portrait');
+  m.classList.add('rotated');
+}
+// "Continuer en portrait" : affiche le dashboard empilé, sans rotation
 function dashForcePortrait() {
-  document.getElementById('dashboard-modal').classList.add('force-portrait');
+  const m = document.getElementById('dashboard-modal');
+  m.classList.remove('rotated');
+  m.classList.add('force-portrait');
 }
 function closeDashboard() {
   const m = document.getElementById('dashboard-modal');
-  if (m) { m.style.display = 'none'; m.classList.remove('force-portrait'); document.body.style.overflow = ''; }
+  if (m) { m.style.display = 'none'; m.classList.remove('force-portrait', 'rotated'); document.body.style.overflow = ''; }
 }
 // Fermeture du dashboard avec la touche Échap
 document.addEventListener('keydown', e => {
@@ -2513,13 +2430,20 @@ async function handleSubmit(btn) {
   btn.innerHTML = '<span class="spark-spinner"></span>&nbsp; Envoi en cours...';
 
   try {
-    const res = await fetch(SEND_ENDPOINT, {
+    const res = await fetch(FORMSPREE_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'contact', nom: nom, email: email, sujet: sujet, message: message })
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        _subject: `[Contact] ${sujet} — ${nom}`,
+        'Type de demande': 'Formulaire de contact',
+        'Nom': nom,
+        email: email,
+        'Sujet': sujet,
+        'Message': message
+      })
     });
     const out = await res.json().catch(() => ({}));
-    if (!res.ok || !out.ok) throw new Error(out.message || 'Erreur HTTP ' + res.status);
+    if (!res.ok || out.ok === false || out.error) throw new Error(out.error || 'Erreur HTTP ' + res.status);
     btn.innerHTML = '✓ Message envoyé !';
     btn.style.background = '#C8FF47';
     document.getElementById('ct-nom').value = '';
