@@ -5,27 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Infrastructures Logistiques & Solutions Financières — AliamGroup</title>
 <meta name="description" content="AliamGroup développe les infrastructures logistiques et financières de nouvelle génération pour l'Afrique de l'Ouest, depuis Abidjan.">
-<link rel="canonical" href="https://www.aliamgroup.com/index.html">
+<link rel="canonical" href="https://smel23.github.io/aliamgroupe/index.html">
 <meta name="robots" content="index, follow">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="AliamGroup">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:title" content="Infrastructures Logistiques & Solutions Financières — AliamGroup">
 <meta property="og:description" content="AliamGroup développe les infrastructures logistiques et financières de nouvelle génération pour l'Afrique de l'Ouest, depuis Abidjan.">
-<meta property="og:url" content="https://www.aliamgroup.com/index.html">
-<meta property="og:image" content="https://www.aliamgroup.com/assets/og-cover.jpg">
+<meta property="og:url" content="https://smel23.github.io/aliamgroupe/index.html">
+<meta property="og:image" content="https://smel23.github.io/aliamgroupe/assets/og-cover.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Infrastructures Logistiques & Solutions Financières — AliamGroup">
 <meta name="twitter:description" content="AliamGroup développe les infrastructures logistiques et financières de nouvelle génération pour l'Afrique de l'Ouest, depuis Abidjan.">
-<meta name="twitter:image" content="https://www.aliamgroup.com/assets/og-cover.jpg">
+<meta name="twitter:image" content="https://smel23.github.io/aliamgroupe/assets/og-cover.jpg">
 <meta name="theme-color" content="#FBF9F5">
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
   "@type":"Organization",
   "name":"AliamGroup",
-  "url":"https://www.aliamgroup.com",
-  "logo":"https://www.aliamgroup.com/assets/logo.png",
+  "url":"https://smel23.github.io/aliamgroupe",
+  "logo":"https://smel23.github.io/aliamgroupe/assets/logo.png",
   "description":"Infrastructures logistiques et solutions financières pour l'Afrique de l'Ouest.",
   "email":"holding.rhflow@gmail.com",
   "telephone":"+225 05 54 35 54 19",
@@ -290,40 +290,111 @@
   /* ===== RESPONSIVE ===== */
   @media(max-width:900px){
     .nav-links{display:none}
-    .nav-links.open{display:flex;position:absolute;top:100%;left:0;right:0;flex-direction:column;
-      align-items:stretch;gap:0;background:var(--surface);border-bottom:1px solid var(--line);padding:8px}
-    .nav-links.open li{width:100%}
-    .nav-links.open a{padding:14px 16px;border-radius:8px}
-    .nav-links.open .nav-cta{text-align:center;margin-top:6px}
-    .nav-toggle{display:flex}
-    .hero-grid{grid-template-columns:1fr;gap:36px}
-    .hero{padding:44px 0 36px}
+    .nav-links.open{display:none}
+    .nav-toggle{display:flex;order:1}
+    .logo{order:2;position:absolute;left:50%;transform:translateX(-50%)}
+    .nav-icon{display:flex;order:3;margin-left:auto}
+    .nav-inner{position:relative;justify-content:flex-start}
+    .hero-grid{grid-template-columns:1fr;gap:24px}
+    .hero{padding:32px 0 26px}
     .hero-sub{max-width:none}
-    .profiles{grid-template-columns:1fr}
-    .kpi-inner{grid-template-columns:1fr;gap:0}
-    .kpi{justify-content:flex-start;padding:16px 0;border-right:none!important;border-bottom:1px solid var(--line)}
-    .kpi:last-child{border-bottom:none}
-    section{padding:42px 0}
-    .bento{grid-template-columns:1fr}
-    .bento .cell-wide{grid-column:span 1}
-    .transport{grid-template-columns:1fr}
-    .board{grid-template-columns:1fr 1fr}
-    .network{grid-template-columns:1fr;gap:28px}
-    .net-stats-inline{gap:20px}
-    .city-grid{grid-template-columns:1fr}
-    .foot-grid{grid-template-columns:1fr 1fr;gap:28px}
-    .review{width:280px}
-    .cta-final{padding:44px 24px;margin:0 20px}
+    /* Profils : 3 côte à côte compacts au lieu d'empilés */
+    .profiles{grid-template-columns:repeat(3,1fr);gap:8px}
+    .profile-card{padding:12px 10px;gap:5px}
+    .profile-card .pc-ic{font-size:17px}
+    .profile-card .pc-t{font-size:12px;line-height:1.25}
+    .profile-card .pc-d{display:none}
+    .profile-card .pc-go{font-size:11px}
+    .hero-cta{gap:10px}
+    .hero-cta a{flex:1;text-align:center;padding:12px 14px}
+    /* KPI : 3 colonnes compactes plutôt qu'empilées */
+    .kpi-inner{grid-template-columns:repeat(3,1fr);gap:0;padding:16px 20px}
+    .kpi{flex-direction:column;align-items:center;text-align:center;gap:4px;padding:0 8px;
+      border-right:1px solid var(--line)!important;border-bottom:none!important}
+    .kpi:last-child{border-right:none!important}
+    .kpi .k-num{font-size:22px}
+    .kpi .k-lbl{font-size:10.5px;max-width:14ch}
+    section{padding:34px 0}
+    .sec-head{margin-bottom:22px}
+    /* Bento : 2 colonnes */
+    .bento{grid-template-columns:1fr 1fr;gap:10px}
+    .bento .cell-wide{grid-column:span 2}
+    .filiale .f-visual{height:96px}
+    .filiale .f-mock{font-size:22px}
+    .filiale .f-body{padding:14px 14px;gap:7px}
+    .filiale .f-name{font-size:16px}
+    .filiale .f-desc{font-size:12px;line-height:1.45}
+    /* Transport : reste large mais moins haut */
+    .transport{grid-template-columns:1fr;gap:10px}
+    .tcard{height:150px}
+    /* Équipe : 2 colonnes */
+    .board{grid-template-columns:1fr 1fr;gap:10px}
+    .leader{padding:16px 14px}
+    .leader .l-av{width:44px;height:44px;font-size:16px;margin-bottom:10px}
+    .leader .l-name{font-size:16px}
+    .leader .l-desc{font-size:12px}
+    .network{grid-template-columns:1fr;gap:20px}
+    .net-stats-inline{gap:18px}
+    .city-grid{grid-template-columns:1fr 1fr}
+    .foot-grid{grid-template-columns:1fr 1fr;gap:22px}
+    .review{width:260px}
+    .cta-final{padding:36px 22px;margin:0 20px}
   }
   @media(max-width:520px){
-    .wrap,.nav-inner,.kpi-inner,.reviews-head{padding-left:20px;padding-right:20px}
-    .board{grid-template-columns:1fr}
-    .foot-grid{grid-template-columns:1fr}
+    .wrap,.nav-inner,.kpi-inner,.reviews-head{padding-left:18px;padding-right:18px}
+    .foot-grid{grid-template-columns:1fr 1fr}
+    /* Bento : la carte large repasse pleine, les autres restent en 2 col */
+    .filiale .f-desc{-webkit-line-clamp:2;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
   }
   @media(prefers-reduced-motion:reduce){
     .marquee-track{animation:none}
     .reveal{opacity:1;transform:none;transition:none}
     .badge-float .pulse::after{animation:none}
+  }
+
+  /* ===== NAV : icône contact (desktop) ===== */
+  .nav-icon{display:none;color:var(--ink)}
+
+  /* ===== MENU PLEIN ÉCRAN (style Hermès) ===== */
+  .menu-overlay{
+    position:fixed;inset:0;z-index:200;background:#fff;
+    display:flex;flex-direction:column;
+    transform:translateX(-100%);transition:transform .35s cubic-bezier(.4,0,.2,1);
+    visibility:hidden;overflow-y:auto;
+  }
+  .menu-overlay.open{transform:translateX(0);visibility:visible}
+  .menu-top{display:flex;align-items:center;justify-content:space-between;padding:26px 24px 30px}
+  .menu-label{font-size:15px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink)}
+  .menu-close{background:none;border:none;font-size:22px;color:var(--ink);cursor:pointer;line-height:1;padding:4px}
+  .menu-list{display:flex;flex-direction:column;padding:0 24px;flex:1}
+  .menu-item{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:19px 0;border-bottom:1px solid var(--line);
+    font-size:16px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);
+  }
+  .menu-item i{font-style:normal;font-size:20px;font-weight:400;color:var(--ink)}
+  .menu-item:active{color:var(--emerald)}
+  .menu-foot{background:var(--bg);padding:26px 24px 34px;display:flex;flex-direction:column;gap:20px}
+  .menu-foot-item{display:flex;align-items:center;gap:14px;font-size:15px;color:var(--ink)}
+  .menu-foot-item svg{color:var(--body);flex-shrink:0}
+
+  /* ===== HERO IMMERSIF (mobile) ===== */
+  .hero-immersive{display:none}
+  @media(max-width:900px){
+    .hero-immersive{
+      display:block;position:relative;height:78vh;min-height:460px;
+      margin:0 0 8px;overflow:hidden;background:linear-gradient(150deg,#0f3d2e,#065f46 55%,#059669);
+    }
+    .hero-immersive img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .hi-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(17,17,17,.7),rgba(17,17,17,.12) 55%,rgba(17,17,17,.25))}
+    .hi-content{position:absolute;left:24px;right:24px;bottom:74px;z-index:2}
+    .hi-title{font-family:'Fraunces',serif;font-weight:500;font-size:32px;line-height:1.12;color:#fff;margin-bottom:16px;max-width:14ch}
+    .hi-link{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#fff;
+      border-bottom:1.5px solid rgba(255,255,255,.6);padding-bottom:5px}
+    .hi-scroll{position:absolute;left:0;right:0;bottom:22px;z-index:2;display:flex;flex-direction:column;
+      align-items:center;gap:5px;color:rgba(255,255,255,.85);font-size:10px;letter-spacing:.18em;text-transform:uppercase}
+    .hi-scroll svg{animation:bob 1.8s ease-in-out infinite}
+    @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
   }
 </style>
 </head>
@@ -332,6 +403,7 @@
 <!-- NAV -->
 <header class="nav">
   <div class="nav-inner">
+    <button class="nav-toggle" id="navToggle" aria-label="Ouvrir le menu"><span></span></button>
     <a href="index.html" class="logo">Aliam<b>Group</b></a>
     <ul class="nav-links" id="navLinks">
       <li><a href="index.html" class="active">Accueil</a></li>
@@ -340,12 +412,56 @@
       <li><a href="equipe.html">Équipe</a></li>
       <li><a href="contact.html" class="nav-cta">Nous contacter</a></li>
     </ul>
-    <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span></button>
+    <a href="contact.html" class="nav-icon" aria-label="Contact">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </a>
   </div>
 </header>
 
+<!-- MENU PLEIN ÉCRAN (style Hermès, mobile) -->
+<div class="menu-overlay" id="menuOverlay">
+  <div class="menu-top">
+    <span class="menu-label">Menu</span>
+    <button class="menu-close" id="menuClose" aria-label="Fermer">✕</button>
+  </div>
+  <nav class="menu-list">
+    <a href="index.html" class="menu-item"><span>Accueil</span></a>
+    <a href="modules.html" class="menu-item"><span>Écosystème</span><i>+</i></a>
+    <a href="performance.html" class="menu-item"><span>Performance</span><i>+</i></a>
+    <a href="equipe.html" class="menu-item"><span>Équipe</span><i>+</i></a>
+  </nav>
+  <div class="menu-foot">
+    <a href="mailto:holding.rhflow@gmail.com" class="menu-foot-item">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+      <span>Nous écrire</span>
+    </a>
+    <a href="tel:+2250554355419" class="menu-foot-item">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      <span>Nous appeler</span>
+    </a>
+    <a href="contact.html" class="menu-foot-item">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>Nous contacter</span>
+    </a>
+  </div>
+</div>
+
 <!-- HERO -->
 <section class="hero">
+  <!-- Bande immersive plein écran (mobile uniquement, style Hermès) -->
+  <a href="modules.html" class="hero-immersive">
+    <img src="assets/hero-logistics.jpg" alt="AliamGroup — réseau logistique" onerror="this.remove()">
+    <div class="hi-overlay"></div>
+    <div class="hi-content">
+      <div class="hi-title">Les flux qui font avancer l'Ouest.</div>
+      <span class="hi-link">Explorer l'écosystème</span>
+    </div>
+    <div class="hi-scroll" aria-hidden="true">
+      <span>Découvrir</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+    </div>
+  </a>
+
   <div class="wrap hero-grid">
     <div class="hero-left">
       <div class="eyebrow">Groupe Logistique &amp; Fintech · Abidjan</div>
@@ -636,10 +752,14 @@
 </footer>
 
 <script>
-  // Menu mobile
-  const tgl=document.getElementById('navToggle'),lnk=document.getElementById('navLinks');
-  tgl.addEventListener('click',()=>lnk.classList.toggle('open'));
-  document.addEventListener('click',e=>{if(!e.target.closest('.nav-inner'))lnk.classList.remove('open')});
+  // Menu plein écran (style Hermès)
+  const tgl=document.getElementById('navToggle'),ov=document.getElementById('menuOverlay'),cl=document.getElementById('menuClose');
+  function openMenu(){ov.classList.add('open');document.body.style.overflow='hidden';}
+  function closeMenu(){ov.classList.remove('open');document.body.style.overflow='';}
+  tgl.addEventListener('click',openMenu);
+  cl.addEventListener('click',closeMenu);
+  ov.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMenu));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
 
   // Compteurs KPI
   function animateCount(el){
