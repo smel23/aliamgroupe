@@ -103,6 +103,30 @@
 
   /* ===== HERO ===== */
   .hero{padding:76px 0 48px}
+
+  /* ===== HERO IMAGE DE FOND PLEIN LARGEUR ===== */
+  .hero-bg{position:relative;min-height:88vh;display:flex;align-items:center;overflow:hidden;
+    background:linear-gradient(135deg,#0f3d2e,#065f46 60%,#059669)}
+  .hero-bg-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%}
+  .hero-bg-overlay{position:absolute;inset:0;
+    background:linear-gradient(to right,rgba(10,15,12,.82),rgba(10,15,12,.5) 55%,rgba(10,15,12,.25));z-index:1}
+  .hero-bg-content{position:relative;z-index:2;padding-top:40px;padding-bottom:40px;max-width:760px}
+  .eyebrow-light{color:#7fe9c0}
+  .hero-bg-title{font-family:'Fraunces',serif;font-weight:500;
+    font-size:clamp(34px,4.6vw,56px);line-height:1.08;letter-spacing:-.015em;color:#fff;margin-bottom:20px;max-width:20ch}
+  .hero-bg-sub{font-size:17px;color:rgba(255,255,255,.85);max-width:46ch;margin-bottom:32px}
+  .btn-hero-light{background:#fff;color:var(--ink);padding:14px 26px;border-radius:100px;font-weight:600;font-size:14.5px;transition:background .2s ease}
+  .btn-hero-light:hover{background:var(--emerald);color:#fff}
+  .btn-hero-ghost{border:1px solid rgba(255,255,255,.4);color:#fff;padding:14px 26px;border-radius:100px;font-weight:600;font-size:14.5px;transition:all .2s ease}
+  .btn-hero-ghost:hover{border-color:#fff;background:rgba(255,255,255,.1)}
+  .hero-scroll-cue{position:absolute;left:0;right:0;bottom:24px;z-index:2;display:flex;flex-direction:column;
+    align-items:center;gap:5px;color:rgba(255,255,255,.8);font-size:10px;letter-spacing:.18em;text-transform:uppercase}
+  .hero-scroll-cue svg{animation:bob 1.8s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+
+  /* Section profils sous le hero */
+  .profils-section{padding:34px 0 8px}
+  .profils-section .profiles-lbl{margin-bottom:12px}
   .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
   h1.hero-title{
     font-family:'Fraunces',serif;font-weight:500;
@@ -295,6 +319,13 @@
     .logo{order:2;position:absolute;left:50%;transform:translateX(-50%)}
     .nav-icon{display:flex;order:3;margin-left:auto}
     .nav-inner{position:relative;justify-content:flex-start}
+    /* Hero image de fond sur mobile */
+    .hero-bg{min-height:82vh}
+    .hero-bg-overlay{background:linear-gradient(to top,rgba(10,15,12,.85),rgba(10,15,12,.35) 60%,rgba(10,15,12,.4))}
+    .hero-bg-content{padding-top:20px;padding-bottom:20px}
+    .hero-bg-title{font-size:32px;max-width:none}
+    .hero-bg-sub{font-size:15px}
+    .profils-section{padding:26px 0 4px}
     .hero-grid{grid-template-columns:1fr;gap:24px}
     .hero{padding:32px 0 26px}
     .hero-sub{max-width:none}
@@ -446,68 +477,48 @@
   </div>
 </div>
 
-<!-- HERO -->
-<section class="hero">
-  <!-- Bande immersive plein écran (mobile uniquement, style Hermès) -->
-  <a href="modules.html" class="hero-immersive">
-    <img src="livreur.jpeg" alt="AliamGroup — réseau logistique" onerror="this.remove()">
-    <div class="hi-overlay"></div>
-    <div class="hi-content">
-      <div class="hi-title">Les flux qui font avancer l'Ouest.</div>
-      <span class="hi-link">Explorer l'écosystème</span>
+<!-- HERO avec image de fond plein largeur -->
+<section class="hero-bg">
+  <img class="hero-bg-img" src="avion.jpeg" alt="Fret aérien AliamGroup" onerror="this.remove()">
+  <div class="hero-bg-overlay"></div>
+  <div class="wrap hero-bg-content">
+    <div class="eyebrow eyebrow-light">Groupe Logistique &amp; Fintech · Abidjan</div>
+    <h1 class="hero-bg-title">Infrastructures logistiques &amp; solutions financières pour l'Afrique de l'Ouest.</h1>
+    <p class="hero-bg-sub">AliamGroup développe des plateformes de flux nouvelle génération depuis Abidjan — terre, air et mer.</p>
+    <div class="hero-cta">
+      <a href="modules.html" class="btn-hero-light">Découvrir notre écosystème</a>
+      <a href="contact.html" class="btn-hero-ghost">Prendre contact</a>
     </div>
-    <div class="hi-scroll" aria-hidden="true">
-      <span>Découvrir</span>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
-    </div>
+  </div>
+  <a href="#profils" class="hero-scroll-cue" aria-hidden="true">
+    <span>Découvrir</span>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
   </a>
+</section>
 
-  <div class="wrap hero-grid">
-    <div class="hero-left">
-      <div class="eyebrow">Groupe Logistique &amp; Fintech · Abidjan</div>
-      <h1 class="hero-title">Infrastructures logistiques &amp; solutions financières pour l'Afrique de l'Ouest.</h1>
-      <p class="hero-sub">AliamGroup développe des plateformes de flux nouvelle génération depuis Abidjan.</p>
-
-      <div class="hero-cta">
-        <a href="modules.html" class="btn-hero-primary">Découvrir notre écosystème</a>
-        <a href="contact.html" class="btn-hero-secondary">Prendre contact</a>
-      </div>
-
-      <div class="profiles-lbl">Ou accédez directement à votre espace :</div>
-      <div class="profiles">
-        <a href="performance.html" class="profile-card">
-          <span class="pc-ic">📈</span>
-          <span class="pc-t">Investisseurs &amp; Institutionnels</span>
-          <span class="pc-d">Métriques et modèles du groupe.</span>
-          <span class="pc-go">Découvrir →</span>
-        </a>
-        <a href="modules.html" class="profile-card">
-          <span class="pc-ic">🚚</span>
-          <span class="pc-t">Marchands &amp; E-commerce</span>
-          <span class="pc-d">Livraison &amp; clearing AliamFlow.</span>
-          <span class="pc-go">Nos solutions →</span>
-        </a>
-        <a href="contact.html" class="profile-card">
-          <span class="pc-ic">🤝</span>
-          <span class="pc-t">Talents &amp; Carrières</span>
-          <span class="pc-d">Rejoindre l'équipe AliamGroup.</span>
-          <span class="pc-go">Postuler →</span>
-        </a>
-      </div>
-    </div>
-
-    <div class="hero-right">
-      <div class="hero-visual">
-        <img src="livreur.jpeg" alt="Réseau logistique AliamGroup à Abidjan"
-             onerror="this.style.display='none'">
-        <div class="badge-float">
-          <span class="pulse"></span>
-          <span>
-            <span class="bf-num" id="hero-live">124 colis/h</span><br>
-            <span class="bf-lbl">Réseau Abidjan · en direct</span>
-          </span>
-        </div>
-      </div>
+<!-- ACCÈS DIRECT (3 profils) -->
+<section id="profils" class="profils-section">
+  <div class="wrap">
+    <div class="profiles-lbl">Accédez directement à votre espace :</div>
+    <div class="profiles">
+      <a href="performance.html" class="profile-card">
+        <span class="pc-ic">📈</span>
+        <span class="pc-t">Investisseurs &amp; Institutionnels</span>
+        <span class="pc-d">Métriques et modèles du groupe.</span>
+        <span class="pc-go">Découvrir →</span>
+      </a>
+      <a href="modules.html" class="profile-card">
+        <span class="pc-ic">🚚</span>
+        <span class="pc-t">Marchands &amp; E-commerce</span>
+        <span class="pc-d">Livraison &amp; clearing AliamFlow.</span>
+        <span class="pc-go">Nos solutions →</span>
+      </a>
+      <a href="contact.html" class="profile-card">
+        <span class="pc-ic">🤝</span>
+        <span class="pc-t">Talents &amp; Carrières</span>
+        <span class="pc-d">Rejoindre l'équipe AliamGroup.</span>
+        <span class="pc-go">Postuler →</span>
+      </a>
     </div>
   </div>
 </section>
