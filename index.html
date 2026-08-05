@@ -171,6 +171,43 @@
   .profile-card .pc-d{font-size:12.5px;color:var(--body);line-height:1.5}
   .profile-card .pc-go{font-size:12px;font-weight:600;color:var(--emerald);margin-top:2px}
 
+  /* ===== LIVE TICKER (bande de performance temps réel) ===== */
+  .ticker-wrap{
+    background:#0d1117;overflow:hidden;position:relative;border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  .ticker-wrap::before,.ticker-wrap::after{
+    content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none;
+  }
+  .ticker-wrap::before{left:0;background:linear-gradient(to right,#0d1117,transparent)}
+  .ticker-wrap::after{right:0;background:linear-gradient(to left,#0d1117,transparent)}
+  .ticker-track{
+    display:flex;align-items:center;gap:0;width:max-content;
+    animation:ticker-scroll 32s linear infinite;
+    padding:13px 0;
+  }
+  .ticker-wrap:hover .ticker-track{animation-play-state:paused}
+  @keyframes ticker-scroll{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+  .ticker-item{
+    display:flex;align-items:center;gap:9px;padding:0 28px;white-space:nowrap;
+    border-right:1px solid rgba(255,255,255,.08);
+  }
+  .ticker-live{
+    display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;
+    letter-spacing:.12em;text-transform:uppercase;color:#3fb950;
+  }
+  .ticker-live .t-dot{width:6px;height:6px;border-radius:50%;background:#3fb950;animation:blink 1.6s ease-in-out infinite}
+  .ticker-lbl{font-size:13px;color:#c9d1d9}
+  .ticker-val{font-size:13.5px;font-weight:700;color:#58a6ff;font-variant-numeric:tabular-nums}
+  .ticker-val.up{color:#3fb950}
+  .ticker-trend{font-size:11px;color:#3fb950}
+  @media(max-width:900px){
+    .ticker-track{animation-duration:22s;padding:11px 0}
+    .ticker-item{padding:0 18px;gap:7px}
+    .ticker-lbl{font-size:12px}
+    .ticker-val{font-size:12.5px}
+  }
+  @media(prefers-reduced-motion:reduce){.ticker-track{animation:none}}
+
   /* ===== KPI BANDEAU ===== */
   .kpi-band{border-block:1px solid var(--line);background:var(--surface)}
   .kpi-inner{max-width:var(--maxw);margin:0 auto;padding:22px 32px;
@@ -496,6 +533,11 @@
   </a>
 </section>
 
+<!-- LIVE TICKER — métriques temps réel de l'écosystème AliamGroup -->
+<div class="ticker-wrap" aria-label="Indicateurs de performance en direct">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
 <!-- ACCÈS DIRECT (3 profils) -->
 <section id="profils" class="profils-section">
   <div class="wrap">
@@ -526,9 +568,9 @@
 <!-- KPI BAND -->
 <div class="kpi-band">
   <div class="kpi-inner">
-    <div class="kpi"><span class="k-num" data-count="12450" data-suffix="+">0</span><span class="k-lbl">Colis / mois — moyenne mensuelle</span></div>
-    <div class="kpi"><span class="k-num" data-count="98.7" data-suffix="%">0</span><span class="k-lbl">Taux de livraison — SLA réseau</span></div>
-    <div class="kpi"><span class="k-num" data-count="100" data-suffix="%">0</span><span class="k-lbl">Uptime infrastructure — API</span></div>
+    <div class="kpi"><span class="k-num" data-count="12450" data-suffix="+">0</span><span class="k-lbl">Colis livrés / mois</span></div>
+    <div class="kpi"><span class="k-num" data-count="98.4" data-suffix="%">0</span><span class="k-lbl">Taux de succès de livraison</span></div>
+    <div class="kpi"><span class="k-num" data-count="150" data-suffix="+">0</span><span class="k-lbl">Marchands partenaires actifs</span></div>
   </div>
 </div>
 
@@ -771,6 +813,34 @@
   cl.addEventListener('click',closeMenu);
   ov.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMenu));
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
+
+  // Live Ticker — métriques réelles de l'écosystème AliamGroup
+  // Tente l'endpoint public (GET /api/v1/public/metrics/ticker), sinon repli sur les valeurs statiques du document interne.
+  const TICKER_FALLBACK = {
+    status:"success",
+    metrics:[
+      { label:"Volume Traité (GTV)", value:"14,1M XOF", trend:"up" },
+      { label:"Colis Livrés (Mois)", value:"+12 450", trend:"up" },
+      { label:"Taux de Succès", value:"98,4%", trend:"stable" },
+      { label:"Reversement Marchand", value:"< 2h", trend:"fast" },
+      { label:"Marchands Actifs", value:"+150", trend:"up" }
+    ]
+  };
+  function renderTicker(data){
+    const track=document.getElementById('tickerTrack');
+    if(!track||!data||!data.metrics)return;
+    const items=data.metrics.map(m=>`
+      <div class="ticker-item">
+        <span class="ticker-live"><span class="t-dot"></span>Live</span>
+        <span class="ticker-lbl">${m.label}</span>
+        <span class="ticker-val ${m.trend==='up'?'up':''}">${m.value}</span>
+      </div>`).join('');
+    track.innerHTML = items + items; // dupliqué pour boucle continue
+  }
+  fetch('/api/v1/public/metrics/ticker').then(r=>{
+    if(!r.ok) throw new Error('unavailable');
+    return r.json();
+  }).then(renderTicker).catch(()=>renderTicker(TICKER_FALLBACK));
 
   // Compteurs KPI
   function animateCount(el){
