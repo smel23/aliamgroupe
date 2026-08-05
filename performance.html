@@ -607,7 +607,8 @@
   fetch('/api/v1/public/metrics/ticker').then(r=>{
     if(!r.ok) throw new Error('unavailable');
     return r.json();
-  }).then(renderTicker).catch(()=>renderTicker(TICKER_FALLBACK));
+  }).then(renderTicker).catch(()=>{});
+  renderTicker(TICKER_FALLBACK); // affichage immédiat, pas d'attente réseau
 </script>
 
 
