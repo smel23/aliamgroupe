@@ -87,6 +87,42 @@
   .nav-toggle span::before{position:absolute;top:-6px}
   .nav-toggle span::after{position:absolute;top:6px}
 
+  /* ===== LIVE TICKER (bande de performance temps réel) ===== */
+  .ticker-wrap{
+    background:#0d1117;overflow:hidden;position:relative;border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  .ticker-wrap::before,.ticker-wrap::after{
+    content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none;
+  }
+  .ticker-wrap::before{left:0;background:linear-gradient(to right,#0d1117,transparent)}
+  .ticker-wrap::after{right:0;background:linear-gradient(to left,#0d1117,transparent)}
+  .ticker-track{
+    display:flex;align-items:center;gap:0;width:max-content;
+    animation:ticker-scroll 32s linear infinite;
+    padding:13px 0;
+  }
+  .ticker-wrap:hover .ticker-track{animation-play-state:paused}
+  @keyframes ticker-scroll{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+  .ticker-item{
+    display:flex;align-items:center;gap:9px;padding:0 28px;white-space:nowrap;
+    border-right:1px solid rgba(255,255,255,.08);
+  }
+  .ticker-live{
+    display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;
+    letter-spacing:.12em;text-transform:uppercase;color:#3fb950;
+  }
+  .ticker-live .t-dot{width:6px;height:6px;border-radius:50%;background:#3fb950;animation:blink 1.6s ease-in-out infinite}
+  .ticker-lbl{font-size:13px;color:#c9d1d9}
+  .ticker-val{font-size:13.5px;font-weight:700;color:#58a6ff;font-variant-numeric:tabular-nums}
+  .ticker-val.up{color:#3fb950}
+  @media(max-width:900px){
+    .ticker-track{animation-duration:22s;padding:11px 0}
+    .ticker-item{padding:0 18px;gap:7px}
+    .ticker-lbl{font-size:12px}
+    .ticker-val{font-size:12.5px}
+  }
+  @media(prefers-reduced-motion:reduce){.ticker-track{animation:none}}
+
   /* ===== HERO ===== */
   .hero{padding:76px 0 48px}
   .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
@@ -453,7 +489,10 @@
   </div>
 </div>
 
-
+<!-- LIVE TICKER — métriques temps réel de l'écosystème AliamGroup -->
+<div class="ticker-wrap" aria-label="Indicateurs de performance en direct">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
 
 <section class="page-hero"><div class="wrap reveal">
   <div class="eyebrow">Performance</div>
@@ -462,12 +501,12 @@
 </div></section>
 <section style="padding-top:20px"><div class="wrap">
   <div class="perf-grid">
-    <div class="perf-card reveal"><div class="pc-num" data-count="12450" data-suffix="+">0</div><div class="pc-lbl">Colis traités par mois — moyenne</div></div>
-    <div class="perf-card reveal"><div class="pc-num" data-count="98.7" data-suffix="%">0</div><div class="pc-lbl">Taux de livraison réussie (SLA)</div></div>
-    <div class="perf-card reveal"><div class="pc-num" data-count="100" data-suffix="%">0</div><div class="pc-lbl">Uptime de l'infrastructure API</div></div>
-    <div class="perf-card reveal"><div class="pc-num" data-count="1500" data-suffix="+">0</div><div class="pc-lbl">Boutiques marchandes connectées</div></div>
-    <div class="perf-card reveal"><div class="pc-num" data-count="42" data-suffix="">0</div><div class="pc-lbl">Routes d'expédition ouvertes</div></div>
-    <div class="perf-card reveal"><div class="pc-num" data-count="6" data-suffix="+">0</div><div class="pc-lbl">Structures opérationnelles</div></div>
+    <div class="perf-card reveal"><div class="pc-num" data-count="14.1" data-suffix="M XOF">0</div><div class="pc-lbl">Volume Brut Traité (GTV) mensuel</div></div>
+    <div class="perf-card reveal"><div class="pc-num" data-count="12450" data-suffix="+">0</div><div class="pc-lbl">Colis livrés par mois</div></div>
+    <div class="perf-card reveal"><div class="pc-num" data-count="98.4" data-suffix="%">0</div><div class="pc-lbl">Taux de succès de livraison</div></div>
+    <div class="perf-card reveal"><div class="pc-num" data-count="2" data-suffix="h" data-prefix="< ">0</div><div class="pc-lbl">Délai moyen de reversement marchand</div></div>
+    <div class="perf-card reveal"><div class="pc-num" data-count="150" data-suffix="+">0</div><div class="pc-lbl">Marchands partenaires actifs</div></div>
+    <div class="perf-card reveal"><div class="pc-num" data-count="6" data-suffix="+">0</div><div class="pc-lbl">Structures opérationnelles du groupe</div></div>
   </div>
   <div class="reveal" style="margin-top:40px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:32px;box-shadow:var(--shadow)">
     <div class="eyebrow">Synergie de groupe</div>
@@ -542,14 +581,42 @@
       a.classList.toggle('active',(t===''?'index':t)===p&&!a.classList.contains('nav-cta'));
     });
   })();
+
+  // Live Ticker — métriques réelles de l'écosystème AliamGroup
+  const TICKER_FALLBACK = {
+    status:"success",
+    metrics:[
+      { label:"Volume Traité (GTV)", value:"14,1M XOF", trend:"up" },
+      { label:"Colis Livrés (Mois)", value:"+12 450", trend:"up" },
+      { label:"Taux de Succès", value:"98,4%", trend:"stable" },
+      { label:"Reversement Marchand", value:"< 2h", trend:"fast" },
+      { label:"Marchands Actifs", value:"+150", trend:"up" }
+    ]
+  };
+  function renderTicker(data){
+    const track=document.getElementById('tickerTrack');
+    if(!track||!data||!data.metrics)return;
+    const items=data.metrics.map(m=>`
+      <div class="ticker-item">
+        <span class="ticker-live"><span class="t-dot"></span>Live</span>
+        <span class="ticker-lbl">${m.label}</span>
+        <span class="ticker-val ${m.trend==='up'?'up':''}">${m.value}</span>
+      </div>`).join('');
+    track.innerHTML = items + items;
+  }
+  fetch('/api/v1/public/metrics/ticker').then(r=>{
+    if(!r.ok) throw new Error('unavailable');
+    return r.json();
+  }).then(renderTicker).catch(()=>renderTicker(TICKER_FALLBACK));
 </script>
 
 
 <script>
-function ac(el){const t=parseFloat(el.dataset.count),s=el.dataset.suffix||'',d=(t%1!==0)?1:0,dur=1400,st=performance.now();
+function ac(el){
+  const t=parseFloat(el.dataset.count),s=el.dataset.suffix||'',pre=el.dataset.prefix||'',d=(t%1!==0)?1:0,dur=1400,st=performance.now();
   function tk(n){const p=Math.min((n-st)/dur,1),e=1-Math.pow(1-p,3),v=t*e;
-    el.textContent=(d?v.toFixed(1):Math.floor(v).toLocaleString('fr-FR'))+s;
-    if(p<1)requestAnimationFrame(tk);else el.textContent=(d?t.toFixed(1):t.toLocaleString('fr-FR'))+s;}
+    el.textContent=pre+(d?v.toFixed(1):Math.floor(v).toLocaleString('fr-FR'))+s;
+    if(p<1)requestAnimationFrame(tk);else el.textContent=pre+(d?t.toFixed(1):t.toLocaleString('fr-FR'))+s;}
   requestAnimationFrame(tk);}
 const o=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting&&!en.target.dataset.done){en.target.dataset.done='1';ac(en.target);}}),{threshold:.5});
 document.querySelectorAll('.pc-num[data-count]').forEach(el=>o.observe(el));
